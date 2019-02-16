@@ -41,8 +41,10 @@ fn main() {
     let poems = get_poems();
     println!("{}, {}", author, title);
 
+    // TODO: Fuzzy search and search with minimal parms
     let res = poems.iter().find(|x| x.title == title && x.author == author);
 
+    // TODO: Pretty print
     println!("{}", serde_json::to_string_pretty(&res).unwrap());
 }
 
