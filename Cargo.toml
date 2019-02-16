@@ -1,0 +1,10 @@
+[package]
+name = "Perch"
+version = "0.1.0"
+authors = ["thsowers <tyler@startrakstudios.com>"]
+edition = "2018"
+
+[dependencies]
+serde = "1.0.87"
+serde_derive = "1.0.87"
+serde_json = "1.0.38"
