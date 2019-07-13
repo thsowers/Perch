@@ -1,0 +1,12 @@
+[package]
+name = "cli"
+version = "0.1.0"
+authors = ["thsowers <thsowers@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+perch = "*"
+clap = "2.33.0"
+
+[patch.crates-io]
+perch = {path = '../lib'}

@@ -4,6 +4,9 @@ version = "0.1.0"
 authors = ["thsowers <tyler@startrakstudios.com>"]
 edition = "2018"
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
 serde = "1.0.94"
 serde_derive = "1.0.94"

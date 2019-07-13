@@ -25,7 +25,7 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
 
     // Deserialize Poem JSON
     let mut s = String::new();
-    let _data = File::open("poems.json")
+    let _data = File::open("../lib/poems.json")
         .unwrap()
         .read_to_string(&mut s)
         .unwrap();
