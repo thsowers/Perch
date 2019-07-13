@@ -1,4 +1,4 @@
-use crate::models::{Poems};
+use crate::models::Poems;
 use std::fs::create_dir;
 use std::fs::File;
 use std::io::Read;
@@ -17,7 +17,7 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
 
     // Create Index & Writer
     let index = create_index(&schema);
-    let mut index_writer = index.writer(50_000_000)?;
+    let mut index_writer = index.writer(100_000_000)?;
 
     let title = schema.get_field("title").unwrap();
     let author = schema.get_field("author").unwrap();

@@ -10,7 +10,7 @@ fn main() {
         (@arg index: -i "Build the poem index")
         (@arg QUERY: "Query")
     )
-        .get_matches();
+    .get_matches();
 
     if matches.is_present("index") {
         build_search_index::write_persistent_index().unwrap();
@@ -21,5 +21,5 @@ fn main() {
     let query = str::replace(matches.value_of("QUERY").unwrap(), "_", " ");
 
     // TODO: Clean up printing
-    println!("{:?}", search::search(query).unwrap());
+    println!("{:?}", search::search_as_json(query));
 }
