@@ -1,4 +1,4 @@
-use crate::Poems;
+use crate::models::{Poems};
 use std::fs::create_dir;
 use std::fs::File;
 use std::io::Read;
@@ -9,7 +9,7 @@ use tantivy::Index;
 
 pub fn write_persistent_index() -> tantivy::Result<()> {
     // Create index path
-    let path = Path::new("./db.json");
+    let path = Path::new("./db");
     let _index_path = create_dir(path).unwrap();
 
     // Build fields
@@ -48,7 +48,7 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
 }
 
 pub fn create_index(schema: &Schema) -> Index {
-    Index::open_or_create(MmapDirectory::open("./db.json").unwrap(), schema.clone()).unwrap()
+    Index::open_or_create(MmapDirectory::open("./db").unwrap(), schema.clone()).unwrap()
 }
 
 pub fn build_schema() -> Schema {

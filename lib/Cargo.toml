@@ -5,8 +5,8 @@ authors = ["thsowers <tyler@startrakstudios.com>"]
 edition = "2018"
 
 [dependencies]
-serde = "1.0.89"
-serde_derive = "1.0.89"
-serde_json = "1.0.39"
-clap = "2.32.0"
-tantivy = "0.8.2"
+serde = "1.0.94"
+serde_derive = "1.0.94"
+serde_json = "1.0.40"
+clap = "2.33.0"
+tantivy = "0.10.0"
