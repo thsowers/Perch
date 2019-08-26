@@ -1,4 +1,5 @@
 use crate::build_search_index::{build_schema, create_index};
+use serde_json::value as Json;
 use tantivy::collector::TopDocs;
 use tantivy::query::QueryParser;
 use tantivy::schema::*;
@@ -28,7 +29,7 @@ pub fn search(search_term: String) -> Result<Vec<(f32, tantivy::DocAddress)>, Er
     Ok(top_docs)
 }
 
-pub fn search_as_json(query: String) -> Vec<String> {
+pub fn search_as_json(query: String) -> Json::Value {
     let mut result = Vec::new();
     let docs = search(query).unwrap();
 
@@ -42,14 +43,11 @@ pub fn search_as_json(query: String) -> Vec<String> {
     // Acquire a new worker
     let searcher = reader.searcher();
 
-    // Acquire a new worker
-    let searcher = reader.searcher();
-
     for (_score, doc_address) in docs {
         let retrieved_doc = searcher.doc(doc_address).unwrap();
 
-        result.push(schema.to_json(&retrieved_doc));
+        result.push(schema.to_named_doc(&retrieved_doc));
     }
 
-    result
+    serde_json::to_value(result).unwrap()
 }

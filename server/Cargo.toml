@@ -1,0 +1,19 @@
+[package]
+name = "server"
+version = "0.1.0"
+authors = ["thsowers <thsowers@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+perch = "*"
+rocket = "0.4.2"
+serde = "1.0.98"
+serde_derive = "1.0.98"
+serde_json = "1.0.40"
+rocket_contrib = "0.4.2"
+
+[patch.crates-io]
+perch = {path = '../lib'}
+
+[profile.release]
+lto = true

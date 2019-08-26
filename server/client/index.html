@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Perch - Poem Search</title>
+</head>
+<style>
+    body {
+        background-color: #333436;
+        margin: 0;
+    }
+
+    .title {
+        padding: 5px;
+        font-size: large;
+    }
+
+    .author {
+        padding: 5px;
+    }
+
+    .body {
+        padding: 10px;
+        border-bottom: 1px solid gray;
+    }
+
+    #search {
+        background-color: #255795;
+        border: none;
+        color: white;
+        display: block;
+        font-size: 22px;
+        height: 26px;
+        padding: 10px;
+        width: 100%;
+    }
+</style>
+
+<script>
+    function search(e) {
+        const xhr = new XMLHttpRequest();
+        const resultBox = document.getElementById("results");
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const result = JSON.parse(xhr.response);
+                resultBox.innerHTML = '';
+                result.forEach((x) => {
+                    resultBox.innerHTML += '<div class="title">' + x.title[0] + '</div>';
+                    resultBox.innerHTML += '<div class="author">' + x.author[0] + '</div>';
+                    resultBox.innerHTML += '<div class="body">' + x.body[0].replace(new RegExp('\r?\n', 'g'), '<br />') + '</div>';
+                });
+            } else {
+                console.error(xhr.response);
+            }
+        };
+
+        xhr.open('GET', 'http://localhost:8000/' + encodeURI(e));
+        xhr.send();
+    }
+
+    function debounce(func, wait = 100) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                func.apply(this, args);
+            }, wait);
+        };
+    }
+</script>
+
+<body>
+<input id="search" type="text" oninput="debounce(search(this.value))">
+<div id="results"></div>
+</body>
+
+</html>

@@ -36,7 +36,7 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
         index_writer.add_document(doc!(
         title => poem.title.to_string(),
         author => poem.author.to_string(),
-        body => poem.text.join("\n").replace("\n", " ")
+        body => poem.text.join("\n").replace(" \n ", " \\n ")
         ));
     }
 
