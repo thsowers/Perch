@@ -11,6 +11,7 @@ pub fn search(search_term: String) -> Result<Vec<(f32, tantivy::DocAddress)>, Er
     let index = create_index(&schema);
 
     let title = schema.get_field("title").unwrap();
+    let author = schema.get_field("author").unwrap();
     let body = schema.get_field("body").unwrap();
 
     // Setup Reader
@@ -20,11 +21,11 @@ pub fn search(search_term: String) -> Result<Vec<(f32, tantivy::DocAddress)>, Er
     let searcher = reader.searcher();
 
     // Setup query
-    let query_parser = QueryParser::for_index(&index, vec![title, body]);
+    let query_parser = QueryParser::for_index(&index, vec![title, author, body]);
     let query = query_parser.parse_query(&search_term)?;
 
     // Perform our query, and return the top ten results
-    let top_docs = searcher.search(&query, &TopDocs::with_limit(10))?;
+    let top_docs = searcher.search(&query, &TopDocs::with_limit(20))?;
 
     Ok(top_docs)
 }
