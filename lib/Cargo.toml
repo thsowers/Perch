@@ -1,18 +1,17 @@
 [package]
 name = "perch"
-version = "0.1.0"
-authors = ["thsowers <tyler@startrakstudios.com>"]
+version = "0.2.0"
+authors = ["thsowers <thsowers@gmail.com>"]
 edition = "2018"
 
 [lib]
 path = "src/lib.rs"
 
 [dependencies]
-serde = "1.0.98"
-serde_derive = "1.0.98"
+serde = "1.0.99"
+serde_derive = "1.0.99"
 serde_json = "1.0.40"
-clap = "2.33.0"
-tantivy = "0.10.0"
+tantivy = "0.10.1"
 
 [profile.release]
 lto = true
