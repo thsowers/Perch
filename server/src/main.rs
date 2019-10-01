@@ -6,13 +6,15 @@ extern crate rocket;
 extern crate rocket_contrib;
 
 use perch::search;
+use perch::search::SearchType;
 use rocket_contrib::json::{Json, JsonValue};
-use serde_json::Value;
 use rocket_contrib::serve::StaticFiles;
+use serde_json::value as JsonSerde;
+use serde_json::Value;
 
 #[get("/<query>", format = "json")]
-fn get(query: String) -> Json<Value> {
-    Json(search::search_as_json(query))
+fn get(query: String) -> JsonValue {
+    json!(search::search(query, SearchType::HTML))
 }
 
 #[post("/buildIndex")]
@@ -31,7 +33,10 @@ fn not_found() -> JsonValue {
 fn rocket() -> rocket::Rocket {
     rocket::ignite()
         .mount("/", routes![get, build_index])
-        .mount("/", StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/client")))
+        .mount(
+            "/",
+            StaticFiles::from(concat!(env!("CARGO_MANIFEST_DIR"), "/client")),
+        )
         .register(catchers![not_found])
 }
 
