@@ -1,6 +1,6 @@
 use crate::build_search_index::{build_schema, create_index};
 use crate::deserializer::PoemMap;
-use regex::Regex;
+use regex::{Captures, Regex};
 use serde_json::value as Json;
 use tantivy::collector::TopDocs;
 use tantivy::query::QueryParser;
@@ -12,7 +12,7 @@ pub enum SearchType {
     JSON,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub enum ReturnTypes {
     HTML(Json::Value),
     JSON(Json::Value),
@@ -112,19 +112,35 @@ pub fn search_as_html(
 pub fn convert_to_html(mut doc: Vec<PoemMap>, query: String) -> Vec<PoemMap> {
     for poem in doc.iter_mut() {
         let newline_re = Regex::new("\n").unwrap();
-        let query_re = Regex::new(format!(r"{}", query).as_str()).unwrap();
+        let query_re = Regex::new(format!(r"(?i){}", query).as_str()).unwrap();
 
-        let mut result = query_re
-            .replace_all(
-                poem.body.first().unwrap(),
-                format!("<b>{}</b>", query).as_str(),
-            )
-            .to_string();
+        let (mut body, title, author) = bold_query_term(poem, query_re);
 
-        result = newline_re.replace_all(result.as_str(), "<br>").to_string();
+        body = newline_re.replace_all(body.as_str(), "<br>").to_string();
 
-        poem.body = vec![result];
+        poem.body = vec![body];
+        poem.author = vec![author];
+        poem.title = vec![title];
     }
 
     doc
+}
+
+fn bold_query_term(poem: &mut PoemMap, query_re: Regex) -> (String, String, String) {
+    let body = query_re
+        .replace_all(poem.body.first().unwrap(), |caps: &Captures| {
+            format!("<b>{}</b>", &caps[0])
+        })
+        .to_string();
+    let title = query_re
+        .replace_all(poem.title.first().unwrap(), |caps: &Captures| {
+            format!("<b>{}</b>", &caps[0])
+        })
+        .to_string();
+    let author = query_re
+        .replace_all(poem.author.first().unwrap(), |caps: &Captures| {
+            format!("<b>{}</b>", &caps[0])
+        })
+        .to_string();
+    (body, title, author)
 }

@@ -6,8 +6,7 @@
 </head>
 <style>
     body {
-        background-color: #333436;
-        margin: 0;
+        background-color: whitesmoke;
     }
 
     .title {
@@ -24,15 +23,29 @@
         border-bottom: 1px solid gray;
     }
 
+    #results {
+        margin: auto;
+        display: block;
+        padding-top: 42px;
+        width: 80%;
+    }
+
     #search {
-        background-color: #255795;
+        background-color: #00ca88;
         border: none;
         color: white;
         display: block;
         font-size: 22px;
         height: 26px;
-        padding: 10px;
-        width: 100%;
+        padding: 16px;
+        border-radius: 10px;
+        margin: 42px auto auto;
+        min-width: 80%;
+    }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: white;
+        opacity: 1; /* Firefox */
     }
 </style>
 
@@ -45,10 +58,10 @@
             if (xhr.status >= 200 && xhr.status < 300) {
                 const result = JSON.parse(xhr.response);
                 resultBox.innerHTML = '';
-                result.forEach((x) => {
-                    resultBox.innerHTML += '<div class="title">' + x.title[0] + '</div>';
-                    resultBox.innerHTML += '<div class="author">' + x.author[0] + '</div>';
-                    resultBox.innerHTML += '<div class="body">' + x.body[0].replace(new RegExp('\r?\n', 'g'), '<br />') + '</div>';
+                result.HTML.forEach((x) => {
+                    resultBox.innerHTML += '<div class="title">' + x.title + '</div>';
+                    resultBox.innerHTML += '<div class="author">' + x.author + '</div>';
+                    resultBox.innerHTML += '<div class="body">' + x.body + '</div>';
                 });
             } else {
                 console.error(xhr.response);
@@ -68,10 +81,15 @@
             }, wait);
         };
     }
+
+    function focusCursor() {
+        document.getElementById("search").focus();
+        document.getElementById("search").select();
+    }
 </script>
 
-<body>
-<input id="search" type="text" oninput="debounce(search(this.value))">
+<body onload="focusCursor()">
+<input id="search" placeholder="Search" type="text" oninput="debounce(search(this.value))">
 <div id="results"></div>
 </body>
 
