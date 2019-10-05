@@ -12,7 +12,7 @@ use std::time::Duration;
 pub fn criterion_benchmark(c: &mut Criterion) {
     let mut group = c.benchmark_group("throughput-example");
 
-    group.measurement_time(Duration::new(60, 0));
+    group.measurement_time(Duration::new(25, 0));
     group.bench_function("HTML Search", |b| {
         b.iter(|| {
             search(

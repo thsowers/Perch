@@ -10,7 +10,7 @@ use tantivy::Index;
 pub fn write_persistent_index() -> tantivy::Result<()> {
     // Create index path
     let path = Path::new("./db");
-    let _index_path = create_dir(path).unwrap();
+    let _index_path = create_dir(path).expect("Could not write db directory");
 
     // Build fields
     let schema = build_schema();
@@ -25,10 +25,9 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
 
     // Deserialize Poem JSON
     let mut s = String::new();
-    let _data = File::open("../lib/poems.json")
-        .unwrap()
-        .read_to_string(&mut s)
-        .unwrap();
+    let _data = File::open("poems.json")
+        .expect("Could not find poems.json. Please run this on the file in the /data directory")
+        .read_to_string(&mut s)?;
     let deserialized_poems: Poems = serde_json::from_str(&s).expect("error while reading json");
 
     // Add poems into index
@@ -42,13 +41,15 @@ pub fn write_persistent_index() -> tantivy::Result<()> {
 
     // Finish processing documents in the queue, flush the current index to disk
     // This call is blocking.
-    index_writer.commit().unwrap();
+    index_writer
+        .commit()
+        .expect("Could not flush index to disk");
 
     Ok(())
 }
 
 pub fn create_index(schema: &Schema) -> Index {
-    Index::open_or_create(MmapDirectory::open("./db").unwrap(), schema.clone()).unwrap()
+    Index::open_or_create(MmapDirectory::open("../data/db").unwrap(), schema.clone()).unwrap()
 }
 
 pub fn build_schema() -> Schema {
