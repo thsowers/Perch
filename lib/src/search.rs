@@ -42,15 +42,24 @@ pub fn search(search_term: String, search_type: SearchType) -> ReturnTypes {
 
     // Setup query
     let query_parser = QueryParser::for_index(&index, vec![title, author, body]);
-    let query = query_parser.parse_query(&search_term).unwrap();
+    let query = query_parser
+        .parse_query(&search_term)
+        .expect("Could not parse query");
 
     // Perform our query, and return the top ten results
-    let top_docs = searcher
-        .searcher()
-        .search(&query, &TopDocs::with_limit(10))
-        .unwrap();
+    let top_docs = searcher.searcher().search(&query, &TopDocs::with_limit(10));
 
-    parse_results(top_docs, search_type, search_term, schema, searcher)
+    if top_docs.is_ok() {
+        return parse_results(
+            top_docs.unwrap(),
+            search_type,
+            search_term,
+            schema,
+            searcher,
+        );
+    } else {
+        return parse_results([].to_vec(), search_type, search_term, schema, searcher);
+    }
 }
 
 fn parse_results(
